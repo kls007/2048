@@ -1,0 +1,96 @@
+ShuaiTest = {}
+local _M = ShuaiTest
+
+function _M.__init__()
+    ShuaiTest.require()
+end
+
+function _M.require()
+end
+
+function _M.Refresh(params)
+    local keyCode = params.keyCode
+    local keyCodeStr = tostring(keyCode)
+
+    package.loaded["lua/ShuaiTest"] = nil
+    require("lua/ShuaiTest")
+
+    local functionTestKeyCode = ShuaiTest["Test" .. keyCodeStr]
+    if functionTestKeyCode then
+        functionTestKeyCode()
+    else
+        TipManager.Show("Test" .. keyCodeStr .. "不存在")
+    end
+end
+
+function _M.TestQ()
+    -- print_t("QQQ", "ShuaiTest")
+    -- TipManager.Show("TestQ")
+
+    -- print_t(_VERSION, "_VERSION")
+
+
+
+    local param = 
+    {
+        data = 
+        {
+            {type = 2},
+            {type = 1},
+            {type = 3},
+        },
+        condition = 
+        {
+            {key = "type", value = 1},
+            {key = "type", value = 2},
+            {key = "type", value = 3},
+        }
+    }
+
+    local res = AddItem(param)
+    print(res)
+    
+end
+
+function _M.TestE()
+    print_t("EEE", "ShuaiTest")
+    -- TipManager.Show("TestE")
+    
+
+    print_t(GamePanel.list, "GamePanel.list")
+
+    -- local path = "sprite/food"
+    -- print_t(CS.ShuaiFramework.ResourceManager.LoadAssets(path .. "/" .. "Lettuce_Icon"))
+    -- GamePanel.Image_Button_back.sprite = CS.ShuaiFramework.ResourceManager.LoadAssets(path .. "/" .. "Lettuce_Icon")
+    -- spriteRenderer.sprite = CS.ShuaiFramework.ResourceManager.LoadAssets(path .. "/" .. sprite.value)
+end
+
+function _M.TestW()
+    -- print_t("RRR", "ShuaiTest")
+    -- TipManager.Show("TestR")
+    GamePanel:Up()
+end
+
+function _M.TestS()
+    -- print_t("SSS", "ShuaiTest")
+    -- TipManager.Show("TestE")
+    GamePanel:Down()
+end
+
+function _M.TestA()
+    -- print_t("WWW", "ShuaiTest")
+    -- TipManager.Show("TestW")
+    GamePanel:Left()
+end
+
+function _M.TestD()
+    -- print_t("EEE", "ShuaiTest")
+    -- TipManager.Show("TestE")
+    GamePanel:Right()
+end
+
+
+_M.__init__()
+
+-- return _M
+

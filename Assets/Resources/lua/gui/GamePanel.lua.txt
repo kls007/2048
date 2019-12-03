@@ -1,0 +1,384 @@
+---@class 游戏界面
+GamePanel = GamePanel or {}
+local _M = GamePanel
+
+function _M:__init__()
+    _M:InitView()
+    _M:Main()
+end
+
+function _M:InitView()
+    self.gameObject = UnityEngine.GameObject.Find("Canvas/Root_Panel/GamePanel").gameObject
+    self.transform = self.gameObject.transform
+    local transform = self.transform
+
+    self.ui = self.transform:Find("$ui");
+    self.Button_Button_back = self.transform:Find("$Button_back"):GetComponent("Button");
+    self.Image_Button_back = self.transform:Find("$Button_back"):GetComponent("Image");
+    self.Text_score = self.transform:Find("$score"):GetComponent("Text");
+    self.Text_maxNumber = self.transform:Find("$maxNumber"):GetComponent("Text");
+    self.game = self.transform:Find("$game");
+    self.Image_item = self.transform:Find("$game/$item"):GetComponent("Image");
+    self.Image_bg = self.transform:Find("$game/$item/$bg"):GetComponent("Image");
+    self.Text_Text = self.transform:Find("$game/$item/$bg/$Text"):GetComponent("Text");
+    self.ResultPanel = self.transform:Find("$ResultPanel");
+    self.Button_Button_replay = self.transform:Find("$ResultPanel/$Button_replay"):GetComponent("Button");
+    self.Image_Button_replay = self.transform:Find("$ResultPanel/$Button_replay"):GetComponent("Image");
+    
+end
+
+function _M:Main()
+    self.row = 4
+    self.col = 4
+    self.width = 150
+    
+    self.parent = self.game.transform
+    self.prefab = self.parent.transform:GetChild(0).gameObject
+
+    self:AddListener()
+    self:Start()
+end
+
+function _M:Open()
+    self.gameObject:SetActive(true)
+    -- AudioManager.AudioSource_bgm_game:Play()
+    _M:Start()
+end
+
+function _M:Close()
+    self.gameObject:SetActive(false)
+    -- AudioManager.AudioSource_bgm_game:Stop()
+end
+
+function _M:AddListener()
+    UnityEngine.EventTriggerListener.Get(self.Button_Button_back.gameObject, nil).onClick = function()
+        self:Close()
+        MenuPanel:Open()
+    end
+
+    UnityEngine.EventTriggerListener.Get(self.Button_Button_replay.gameObject, nil).onClick = function()
+        self:Start()
+    end
+end
+
+function _M:Start()
+    -- self.list = {
+    --     [1] = {0, 0, 0, 0},
+    --     [2] = {0, 0, 0, 0},
+    --     [3] = {0, 0, 0, 0},
+    --     [4] = {0, 0, 0, 0},
+    -- }
+    self.list = {
+        [1] = {{}, {}, {}, {}},
+        [2] = {{}, {}, {}, {}},
+        [3] = {{}, {}, {}, {}},
+        [4] = {{}, {}, {}, {}},
+    }
+
+    -- self.list = {
+    --     [1] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
+    --     [2] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
+    --     [3] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
+    --     [4] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
+    -- }
+
+    self:RandomCreate()
+    self:RandomCreate()
+    self:Refresh()
+
+    self.ResultPanel.gameObject:SetActive(false)
+
+    self.isMove = false
+    self.score = 0
+    self.Text_score.text = "当前得分: " .. self.score
+    self.Text_maxNumber.text = self:GetMaxNumber()
+end
+
+function _M:GetMaxNumber()
+    local maxNumber = 0
+
+    for y = 1, self.row, 1 do
+        for x = 1, self.col, 1 do
+            -- if math.abs(self.list[y][x]) > maxNumber then
+                -- maxNumber = math.abs(self.list[y][x])
+            -- end
+        end
+    end
+
+    return maxNumber
+end
+
+function _M:RandomCreate(direction)
+    local randomRow = math.random(1, self.row)
+    local randomCol = math.random(1, self.col)
+    
+    if direction == nil then
+        
+    elseif direction.y == 1 and direction.x == 0 then -- 上
+        randomRow = 1
+    elseif direction.y == -1 and direction.x == 0 then -- 下
+        randomRow = 4
+    elseif direction.y == 0 and direction.x == -1 then -- 左
+        randomCol = 4
+    elseif direction.y == 0 and direction.x == 1 then -- 右
+        randomCol = 1
+    end
+
+    if next(self.list[randomRow][randomCol]) == nil then
+        table.insert(self.list[randomRow][randomCol], deepcopy(SB.foodList[math.random(1, #SB.foodList)]))
+        return
+    else
+        return self:RandomCreate()
+    end
+end
+
+function _M:Refresh()
+    functions.SetActiveAllChildren(self.parent, false)
+
+    for y = 1, self.row, 1 do
+        for x = 1, self.col, 1 do
+            -- local number = self.list[y][x].id
+            if next(self.list[y][x]) ~= nil then
+                local gameObject = functions.GetGo(self.parent, self.prefab)
+                gameObject.transform.localPosition = UnityEngine.Vector3(x * self.width - 375, y * self.width - 375, 0)
+                local Text = gameObject.transform:Find("$bg/$Text"):GetComponent("Text")
+                Text.text = GetName(self.list[y][x])
+                
+                local Image = gameObject:GetComponent("Image")
+            end
+        end
+    end
+end
+
+function _M:Reset()
+    for y = 1, GamePanel.row, 1 do
+        for x = 1, GamePanel.col, 1 do
+            if GamePanel.list[y][x].id then
+                GamePanel.list[y][x].id = math.abs(GamePanel.list[y][x].id)
+            end
+        end
+    end
+end
+
+function _M:Score(number)
+    self.score = self.score + number
+    self.Text_score.text = "当前得分: " .. self.score
+    self.Text_maxNumber.text = self:GetMaxNumber()
+end
+
+-- 左移
+function _M:Left()
+    self.isMove = false
+
+    for y = 1, GamePanel.row, 1 do
+        for j = 2, GamePanel.col, 1 do
+            if next(GamePanel.list[y][j]) ~= nil then
+                -- 左边是空位就右移动
+                if next(GamePanel.list[y][j - 1]) == nil then
+                    GamePanel.list[y][j - 1] = GamePanel.list[y][j]
+                    GamePanel.list[y][j] = {}
+                    self.isMove = true
+                -- 左边是相同元素就相加
+                else
+                    local newItem = Judge(GamePanel.list[y][j], GamePanel.list[y][j - 1])
+                    if newItem then
+                        GamePanel.list[y][j - 1] = newItem
+                        GamePanel.list[y][j] = {}
+                        self.isMove = true
+                        -- self:Score(math.abs(GamePanel.list[y][j - 1].id))
+                    end
+                end
+            end
+        end
+    end
+
+    self:Reset()
+    self:Refresh()
+
+    if self.isMove == true then
+        self:RandomCreate({x = -1, y = 0})
+        self:Refresh()
+    end
+
+    self:CheckIsGameOver()
+end
+
+-- 右移
+function _M:Right()
+    self.isMove = false
+
+    for y = 1, GamePanel.row, 1 do
+        for j = GamePanel.col - 1, 1, -1 do
+            if next(GamePanel.list[y][j]) ~= nil then
+                -- 右边是空位就右移动
+                if next(GamePanel.list[y][j + 1]) == nil then
+                    GamePanel.list[y][j + 1] = GamePanel.list[y][j]
+                    GamePanel.list[y][j] = {}
+                    self.isMove = true
+                -- 右边是相同元素就相加
+                else
+                    local newItem = Judge(GamePanel.list[y][j], GamePanel.list[y][j + 1])
+                    if newItem then
+                        GamePanel.list[y][j + 1] = newItem
+                        GamePanel.list[y][j] = {}
+                        self.isMove = true
+                        -- self:Score(math.abs(GamePanel.list[y][j + 1]))
+                    end
+                end
+                
+            end
+        end
+    end
+
+    self:Reset()
+    self:Refresh()
+
+    if self.isMove == true then
+        self:RandomCreate({x = 1, y = 0})
+        self:Refresh()
+    end
+
+    self:CheckIsGameOver()
+end
+
+-- 上移
+function _M:Up()
+    self.isMove = false
+
+    for x = 1, GamePanel.col, 1 do
+        for j = GamePanel.row - 1, 1, -1 do
+            if next(GamePanel.list[j][x]) ~= nil then
+                -- 上边是空位就向上移动
+                if next(GamePanel.list[j + 1][x]) == nil then
+                    GamePanel.list[j + 1][x] = GamePanel.list[j][x]
+                    GamePanel.list[j][x] = {}
+                    self.isMove = true
+                -- 上边是相同元素就相加
+                else
+                    local newItem = Judge(GamePanel.list[j][x], GamePanel.list[j + 1][x])
+                    if newItem then
+                        GamePanel.list[j + 1][x] = newItem
+                        GamePanel.list[j][x] = {}
+                        self.isMove = true
+                        -- self:Score(math.abs(GamePanel.list[j + 1][x]))
+                    end
+                end
+            end
+        end
+    end
+
+    self:Reset()
+    self:Refresh()
+
+    if self.isMove == true then
+        self:RandomCreate({x = 0, y = 1})
+        self:Refresh()
+    end
+
+    self:CheckIsGameOver()
+end
+
+-- 下移
+function _M:Down()
+    self.isMove = false
+
+    for x = 1, GamePanel.col, 1 do
+        for j = 2, GamePanel.row, 1 do
+            if next(GamePanel.list[j][x]) ~= nil then
+                -- 下边是空位就向上移动
+                if next(GamePanel.list[j - 1][x]) == nil then
+                    GamePanel.list[j - 1][x] = GamePanel.list[j][x]
+                    GamePanel.list[j][x] = {}
+                    self.isMove = true
+                -- 下边是相同元素就相加
+                else
+                    local newItem = Judge(GamePanel.list[j][x], GamePanel.list[j - 1][x])
+                    if newItem then
+                        GamePanel.list[j - 1][x] = newItem
+                        GamePanel.list[j][x] = {}
+                        self.isMove = true
+                        -- self:Score(math.abs(GamePanel.list[j - 1][x]))
+                    end
+                end
+            end
+        end
+    end
+
+    self:Reset()
+    self:Refresh()
+
+    if self.isMove == true then
+        self:RandomCreate({x = 0, y = -1})
+        self:Refresh()
+    end
+
+    self:CheckIsGameOver()
+end
+
+-- 检测是否游戏结束
+function _M:CheckIsGameOver()
+    do return end
+    
+
+    local number = 0
+    for y = 1, self.row, 1 do
+        for x = 1, self.col, 1 do
+            if self.list[y][x] ~= 0 then
+                number = number + 1
+            end
+        end
+    end
+    if number == self.row * self.col then
+        local isCanMove = false
+
+        -- 上移检测
+        for x = 1, GamePanel.col, 1 do
+            for y = GamePanel.row, 1, -1 do
+                if GamePanel.list[y][x] ~= 0 then
+                    for j = y, GamePanel.row - 1, 1 do
+                        -- 上边是空位就向上移动
+                        if GamePanel.list[j + 1][x] == 0 then
+                            isCanMove = true
+                        -- 上边是相同元素就相加
+                        elseif
+                            GamePanel.list[j + 1][x] and GamePanel.list[j + 1][x] > 0 and GamePanel.list[j][x] and
+                                GamePanel.list[j][x] > 0 and
+                                GamePanel.list[j + 1][x] == GamePanel.list[j][x]
+                            then
+                            isCanMove = true
+                        end
+                    end
+                end
+            end
+        end
+
+        -- 右移检测
+        for y = 1, GamePanel.row, 1 do
+            for x = GamePanel.col, 1, -1 do
+                if GamePanel.list[y][x] ~= 0 then
+                    for j = x, GamePanel.col, 1 do
+                        -- 右边是空位就右移动
+                        if GamePanel.list[y][j + 1] == 0 then
+                            isCanMove = true
+                        -- 右边是相同元素就相加
+                        elseif
+                            GamePanel.list[y][j + 1] and GamePanel.list[y][j + 1] > 0 and GamePanel.list[y][j] and
+                                GamePanel.list[y][j] > 0 and
+                                GamePanel.list[y][j + 1] == GamePanel.list[y][j]
+                         then
+                            isCanMove = true
+                        end
+                    end
+                end
+            end
+        end
+
+        if isCanMove ~= true then
+            print_t("游戏结束~~~")
+            self.ResultPanel.gameObject:SetActive(true)
+        end
+    end
+    
+end
+
+_M:__init__()

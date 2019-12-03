@@ -1,0 +1,80 @@
+---@class MenuPanel
+MenuPanel = MenuPanel or {}
+local _M = MenuPanel
+
+function _M:__init__()
+    _M:InitView()
+    _M:Main()
+end
+
+function _M:InitView()
+    self.gameObject = UnityEngine.GameObject.Find("Canvas/Root_Panel/MenuPanel").gameObject
+    self.transform = self.gameObject.transform
+    --
+
+
+    self.Image_mask = self.transform:Find("$mask"):GetComponent("Image");
+    self.Text_level = self.transform:Find("$level"):GetComponent("Text");
+    self.Button_Button_start = self.transform:Find("$Button_start"):GetComponent("Button");
+    self.Image_Button_start = self.transform:Find("$Button_start"):GetComponent("Image");
+    self.buttons = self.transform:Find("$buttons");
+    self.Button_Button1 = self.transform:Find("$buttons/$Button1"):GetComponent("Button");
+    self.Image_Button1 = self.transform:Find("$buttons/$Button1"):GetComponent("Image");
+    self.Button_Button2 = self.transform:Find("$buttons/$Button2"):GetComponent("Button");
+    self.Image_Button2 = self.transform:Find("$buttons/$Button2"):GetComponent("Image");
+    self.Button_Button3 = self.transform:Find("$buttons/$Button3"):GetComponent("Button");
+    self.Image_Button3 = self.transform:Find("$buttons/$Button3"):GetComponent("Image");
+    self.Button_Button4 = self.transform:Find("$buttons/$Button4"):GetComponent("Button");
+    self.Image_Button4 = self.transform:Find("$buttons/$Button4"):GetComponent("Image");
+    self.Button_Button5 = self.transform:Find("$buttons/$Button5"):GetComponent("Button");
+    self.Image_Button5 = self.transform:Find("$buttons/$Button5"):GetComponent("Image");
+    self.Button_Button6 = self.transform:Find("$buttons/$Button6"):GetComponent("Button");
+    self.Image_Button6 = self.transform:Find("$buttons/$Button6"):GetComponent("Image");
+    self.Button_Button7 = self.transform:Find("$buttons/$Button7"):GetComponent("Button");
+    self.Image_Button7 = self.transform:Find("$buttons/$Button7"):GetComponent("Image");
+    self.Button_Button8 = self.transform:Find("$buttons/$Button8"):GetComponent("Button");
+    self.Image_Button8 = self.transform:Find("$buttons/$Button8"):GetComponent("Image");
+    self.Button_Button9 = self.transform:Find("$buttons/$Button9"):GetComponent("Button");
+    self.Image_Button9 = self.transform:Find("$buttons/$Button9"):GetComponent("Image");
+
+    ------------------------------------------
+    self.button_list = {
+        self.Button_Button1,
+        self.Button_Button2,
+        self.Button_Button3,
+        self.Button_Button4,
+        -- self.Button_Button5,
+        -- self.Button_Button6,
+        -- self.Button_Button7,
+        -- self.Button_Button8,
+        -- self.Button_Button9,
+    }
+end
+
+function _M:Main()
+    self.gameObject:SetActive(false)
+
+    for index, Button in ipairs(self.button_list) do
+        UnityEngine.EventTriggerListener.Get(Button.gameObject, nil).onClick = function()
+            GameManager:StartGame({level = index})
+        end
+    end
+end
+
+function _M:Open()
+    self.gameObject:SetActive(true)
+    AudioManager.AudioSource_bgm_menu:Play()
+
+    self:Refresh()
+end
+
+function _M:Close()
+    self.gameObject:SetActive(false)
+    AudioManager.AudioSource_bgm_menu:Stop()
+end
+
+function _M:Refresh(param)
+    -- self.Text_level.text = "当前关卡: " .. UnityEngine.PlayerPrefs.GetInt("level", 1)
+end
+
+_M:__init__()

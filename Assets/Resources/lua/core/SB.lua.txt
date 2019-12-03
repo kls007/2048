@@ -1,0 +1,32 @@
+SB = {}
+
+SB.level = 1
+SB.score = 0
+-- SB.item_number = 0
+-- SB.button_number = 0
+-- SB.task_number = 0
+-- SB.task_time_level = 0
+-- SB.task_time_current = 0
+-- SB.task_time_second = 0
+
+
+-- state = 1 没切过 state = 2 切过的
+SB.foodList = 
+{
+    -- {id = 1, name = "厨师", type = 1, state = 1, number = 1},
+    
+    {id = 2, name = "番茄", type = 2, state = 1, number = 1},
+    {id = 3, name = "生菜", type = 2, state = 1, number = 1},
+
+    {id = 4, name = "刀", type = 3, state = 1, number = 1},
+
+    -- {id = 5, name = "盘子", type = 4, state = 1, number = 1},
+}
+
+-- SB.level_data =
+-- {
+--     [1] = {item_number = 1, button_number = 3, task_number = 8, task_time = 8 * 2 + 4 + 999999},
+--     [2] = {item_number = 2, button_number = 5, task_number = 4, task_time = 20},
+--     [3] = {item_number = 3, button_number = 7, task_number = 3, task_time = 35},
+--     [4] = {item_number = 4, button_number = 9, task_number = 2, task_time = 2 * 30},
+-- }
