@@ -61,6 +61,17 @@ function _M:AddListener()
     end
 end
 
+
+function _M:InitColor()
+    self.colors = {}
+    for y = 1, self.row, 1 do
+        self.colors[y] = {}
+        for x = 1, self.col, 1 do
+            self.colors[y][x] = Color.HexToRGBA(SB.colors[math.random(1, #SB.colors)])
+        end
+    end
+end
+
 function _M:Start()
     self.list = {}
     for y = 1, self.row, 1 do
@@ -69,6 +80,8 @@ function _M:Start()
             self.list[y][x] = {}
         end
     end
+
+    self:InitColor()
 
     self:RandomCreate()
     self:RandomCreate()
@@ -124,6 +137,7 @@ function _M:Refresh()
                 Text.text = GetName(self.list[y][x])
                 
                 local Image = gameObject:GetComponent("Image")
+                Image.color = self.colors[y][x]
             end
         end
     end
