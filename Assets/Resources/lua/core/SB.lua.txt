@@ -10,15 +10,17 @@ SB.score = 0
 -- SB.task_time_second = 0
 
 
+
+
 -- state = 1 没切过 state = 2 切过的
 SB.foodList = 
 {
     -- {id = 1, name = "厨师", type = 1, state = 1, number = 1},
     
-    {id = 2, name = "番茄", type = 2, state = 1, number = 1},
-    {id = 3, name = "生菜", type = 2, state = 1, number = 1},
+    {id = 2, name = "番茄", type = 2, state = 1, number = 1, color = "f55066", icon = "sprite/food/Tomato_Icon"},
+    {id = 3, name = "生菜", type = 2, state = 1, number = 1, color = "dcff93", icon = "sprite/food/Lettuce_Icon"},
 
-    {id = 4, name = "刀", type = 3, state = 1, number = 1},
+    {id = 4, name = "刀", type = 3, state = 1, number = 1, color = "ae716e", icon = "sprite/caidao"},
 
     -- {id = 5, name = "盘子", type = 4, state = 1, number = 1},
 }
@@ -31,29 +33,15 @@ SB.cookbook =
         {id = 3, name = "生菜", type = 2, state = 2, number = 1},
         -- {id = 5, state = 1, number = 1},
     },
-
 }
 
 SB.colors = 
 {
-    -- 马卡龙玫瑰粉红
-    "f55066",
-
-    -- 大巧克力杏仁饼
-    "ae716e",
-
-    -- 杏仁饼香草奶油
-    "f2debd",
-
-    -- 开心果杏仁杏仁饼
-    "dcff93",
-
-    -- 杏仁饼海洋蓝
-    "b8f1ed",
-
-    -- 马卡龙粉
-    "f1b8e4",
-
-    -- 杏仁饼紫
-    "d9b8f1",
+    "f55066", -- 马卡龙玫瑰粉红
+    "ae716e", -- 大巧克力杏仁饼
+    "f2debd", -- 杏仁饼香草奶油
+    "dcff93", -- 开心果杏仁杏仁饼
+    "b8f1ed", -- 杏仁饼海洋蓝
+    "f1b8e4", -- 马卡龙粉
+    "d9b8f1", -- 杏仁饼紫
 }

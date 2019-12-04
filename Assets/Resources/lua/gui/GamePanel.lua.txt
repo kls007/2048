@@ -19,8 +19,6 @@ function _M:InitView()
     self.Text_maxNumber = self.transform:Find("$maxNumber"):GetComponent("Text");
     self.game = self.transform:Find("$game");
     self.Image_item = self.transform:Find("$game/$item"):GetComponent("Image");
-    self.Image_bg = self.transform:Find("$game/$item/$bg"):GetComponent("Image");
-    self.Text_Text = self.transform:Find("$game/$item/$bg/$Text"):GetComponent("Text");
     self.ResultPanel = self.transform:Find("$ResultPanel");
     self.Button_Button_replay = self.transform:Find("$ResultPanel/$Button_replay"):GetComponent("Button");
     self.Image_Button_replay = self.transform:Find("$ResultPanel/$Button_replay"):GetComponent("Image");
@@ -60,7 +58,6 @@ function _M:AddListener()
         self:Start()
     end
 end
-
 
 function _M:InitColor()
     self.colors = {}
@@ -129,15 +126,32 @@ function _M:Refresh()
 
     for y = 1, self.row, 1 do
         for x = 1, self.col, 1 do
-            -- local number = self.list[y][x].id
             if next(self.list[y][x]) ~= nil then
                 local gameObject = functions.GetGo(self.parent, self.prefab)
                 gameObject.transform.localPosition = UnityEngine.Vector3(x * self.width - 375, y * self.width - 375, 0)
-                local Text = gameObject.transform:Find("$bg/$Text"):GetComponent("Text")
-                Text.text = GetName(self.list[y][x])
-                
+                -- local Text = gameObject.transform:Find("$bg/$Text"):GetComponent("Text")
+                -- Text.text = GetName(self.list[y][x])
+
+                functions.SetActiveAllChildren(gameObject, false)
+                local prefab = gameObject.transform:GetChild(0).gameObject
+                print_t(self.list[y][x], "self.list[y][x]")
+                for m = 1, #self.list[y][x], 1 do
+                    local go = functions.GetGo(gameObject.transform, prefab)
+                    go:GetComponent("Image").sprite = CS.ShuaiFramework.ResourceManager.LoadAssets(self.list[y][x][m].icon)
+                end
+
+
+                if gameObject.transform.childCount <= 4 then
+                    gameObject:GetComponent("GridLayoutGroup").constraintCount = 2
+                    gameObject:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(60, 60)
+                else
+                    gameObject:GetComponent("GridLayoutGroup").constraintCount = 3
+                    gameObject:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(40, 40)
+                end
+
+
                 local Image = gameObject:GetComponent("Image")
-                Image.color = self.colors[y][x]
+                Image.color = Color.HexToRGBA("b8f1ed") -- self.list[y][x][1].color
             end
         end
     end
