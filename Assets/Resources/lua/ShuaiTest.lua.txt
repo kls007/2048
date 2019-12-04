@@ -31,25 +31,75 @@ function _M.TestQ()
 
 
 
-    local param = 
-    {
-        data = 
-        {
-            {type = 2},
-            {type = 1},
-            {type = 3},
-        },
-        condition = 
-        {
-            {key = "type", value = 1},
-            {key = "type", value = 2},
-            {key = "type", value = 3},
-        }
-    }
+    -- local param = 
+    -- {
+    --     data = 
+    --     {
+    --         {type = 2},
+    --         {type = 1},
+    --         {type = 3},
+    --     },
+    --     condition = 
+    --     {
+    --         {key = "type", value = 1},
+    --         {key = "type", value = 2},
+    --         {key = "type", value = 3},
+    --     }
+    -- }
 
-    local res = AddItem(param)
-    print(res)
+    -- local res = AddItem(param)
+    -- print(res)
     
+    -- local array1 = {1, 2, 3, 4}
+    -- local array2 = {3, 1, 2}
+    -- local isTrue = functions.IsContainArray(array1, array2)
+    -- print_t(isTrue, "IsContainArray")
+
+
+    -- local array1 = {1, 2, 3, 4}
+    -- local array2 = {3, 1, 2}
+    -- local isTrue = functions.IsContainTable(array1, array2)
+    -- print_t(isTrue, "IsContainTable")
+
+
+    -- local array1 = {1, 2, 3, 4}
+    -- for key1, item1 in pairs(array1) do
+    --     -- body
+    -- end
+
+    local array = {"a", "b", "c", "d", "e"}
+    array[1] = nil
+    array[2] = nil
+    array[4] = nil
+
+    array[3] = nil
+    array[5] = nil
+
+    print(array[1])
+    print(array[2])
+    print(array[3])
+    print(array[4])
+    print(array[5])
+
+    print(#array)
+
+    -- local array1 = {1, 2, 3, 4}
+    -- local array2 = {3, 1, 2}
+    -- local isTrue = functions.IsContainTable(array1, SB.cookbook[1])
+    -- print_t(isTrue, "IsContainTable")
+    
+
+    -- for index1 = #copy_array1, 1, -1 do
+    --     local item1 = copy_array1[index1]
+    --     for index2 = #copy_array2, 1, -1 do
+    --         local item2 = copy_array2[index2]
+    --         if item1 == item2 then
+    --             table.remove(copy_array1, index1)
+    --             table.remove(copy_array2, index2)
+    --             break
+    --         end
+    --     end
+    -- end
 end
 
 function _M.TestE()

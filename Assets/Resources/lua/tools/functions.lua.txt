@@ -279,3 +279,64 @@ function AddItem(param)
         return false
     end
 end
+
+-- 数组1是否包含数组2
+function functions.IsContainArray(array1, array2)
+    local isTrue = false
+
+    local copy_array1 = deepcopy(array1)
+    local copy_array2 = deepcopy(array2)
+
+    for index1 = #copy_array1, 1, -1 do
+        local item1 = copy_array1[index1]
+        for index2 = #copy_array2, 1, -1 do
+            local item2 = copy_array2[index2]
+            if item1 == item2 then
+                table.remove(copy_array1, index1)
+                table.remove(copy_array2, index2)
+                break
+            end
+        end
+    end
+
+    if #copy_array2 == 0 then
+        isTrue = true
+    else
+        isTrue = false
+    end
+
+    return isTrue
+end
+
+-- talbe1是否包含talbe2
+function functions.IsContainTable(table1, table2)
+    local isTrue = false
+
+    local copy_table1 = deepcopy(table1)
+    local copy_table2 = deepcopy(table2)
+
+    for key1, item1 in pairs(copy_table1) do
+        for key2, item2 in pairs(copy_table2) do
+        	local isRemove = false
+            if item1 == item2 then
+                isRemove = true
+			elseif type(item1) == "table" and type(item2) == "table" then
+       			isRemove = functions.IsContainTable(item1, item2)
+            end
+
+            if isRemove then
+	            copy_table1[key1] = nil
+                copy_table2[key2] = nil
+	            break
+            end
+        end
+    end
+
+    if next(copy_table1) == nil and next(copy_table2) == nil then
+        isTrue = true
+    else
+        isTrue = false
+    end
+
+    return isTrue
+end

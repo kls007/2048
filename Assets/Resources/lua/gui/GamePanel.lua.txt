@@ -62,25 +62,13 @@ function _M:AddListener()
 end
 
 function _M:Start()
-    -- self.list = {
-    --     [1] = {0, 0, 0, 0},
-    --     [2] = {0, 0, 0, 0},
-    --     [3] = {0, 0, 0, 0},
-    --     [4] = {0, 0, 0, 0},
-    -- }
-    self.list = {
-        [1] = {{}, {}, {}, {}},
-        [2] = {{}, {}, {}, {}},
-        [3] = {{}, {}, {}, {}},
-        [4] = {{}, {}, {}, {}},
-    }
-
-    -- self.list = {
-    --     [1] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
-    --     [2] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
-    --     [3] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
-    --     [4] = {{id = 0}, {id = 0}, {id = 0}, {id = 0}},
-    -- }
+    self.list = {}
+    for y = 1, self.row, 1 do
+        self.list[y] = {}
+        for x = 1, self.col, 1 do
+            self.list[y][x] = {}
+        end
+    end
 
     self:RandomCreate()
     self:RandomCreate()
@@ -96,15 +84,6 @@ end
 
 function _M:GetMaxNumber()
     local maxNumber = 0
-
-    for y = 1, self.row, 1 do
-        for x = 1, self.col, 1 do
-            -- if math.abs(self.list[y][x]) > maxNumber then
-                -- maxNumber = math.abs(self.list[y][x])
-            -- end
-        end
-    end
-
     return maxNumber
 end
 
@@ -117,9 +96,9 @@ function _M:RandomCreate(direction)
     elseif direction.y == 1 and direction.x == 0 then -- 上
         randomRow = 1
     elseif direction.y == -1 and direction.x == 0 then -- 下
-        randomRow = 4
+        randomRow = self.row
     elseif direction.y == 0 and direction.x == -1 then -- 左
-        randomCol = 4
+        randomCol = self.col
     elseif direction.y == 0 and direction.x == 1 then -- 右
         randomCol = 1
     end
@@ -185,7 +164,6 @@ function _M:Left()
                         GamePanel.list[y][j - 1] = newItem
                         GamePanel.list[y][j] = {}
                         self.isMove = true
-                        -- self:Score(math.abs(GamePanel.list[y][j - 1].id))
                     end
                 end
             end
@@ -222,7 +200,6 @@ function _M:Right()
                         GamePanel.list[y][j + 1] = newItem
                         GamePanel.list[y][j] = {}
                         self.isMove = true
-                        -- self:Score(math.abs(GamePanel.list[y][j + 1]))
                     end
                 end
                 
@@ -260,7 +237,6 @@ function _M:Up()
                         GamePanel.list[j + 1][x] = newItem
                         GamePanel.list[j][x] = {}
                         self.isMove = true
-                        -- self:Score(math.abs(GamePanel.list[j + 1][x]))
                     end
                 end
             end
@@ -297,7 +273,6 @@ function _M:Down()
                         GamePanel.list[j - 1][x] = newItem
                         GamePanel.list[j][x] = {}
                         self.isMove = true
-                        -- self:Score(math.abs(GamePanel.list[j - 1][x]))
                     end
                 end
             end
@@ -317,8 +292,19 @@ end
 
 -- 检测是否游戏结束
 function _M:CheckIsGameOver()
+    for y = 1, self.row, 1 do
+        for x = 1, self.col, 1 do
+            local isTrue = functions.IsContainTable(SB.cookbook[1], self.list[y][x])
+	        print_t(isTrue, "IsContainTable")
+            if isTrue then
+                print_t(isTrue, "NBNBNBNBNBNBNBNBNBNBNBNBNBNB")
+            end
+        end
+    end
+
+
     do return end
-    
+
 
     local number = 0
     for y = 1, self.row, 1 do

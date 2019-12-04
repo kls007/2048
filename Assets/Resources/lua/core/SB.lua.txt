@@ -23,10 +23,14 @@ SB.foodList =
     -- {id = 5, name = "盘子", type = 4, state = 1, number = 1},
 }
 
--- SB.level_data =
--- {
---     [1] = {item_number = 1, button_number = 3, task_number = 8, task_time = 8 * 2 + 4 + 999999},
---     [2] = {item_number = 2, button_number = 5, task_number = 4, task_time = 20},
---     [3] = {item_number = 3, button_number = 7, task_number = 3, task_time = 35},
---     [4] = {item_number = 4, button_number = 9, task_number = 2, task_time = 2 * 30},
--- }
+SB.cookbook = 
+{
+    {
+        -- id = 1,
+        {id = 2, name = "番茄", type = 2, state = 2, number = 1},
+        {id = 3, name = "生菜", type = 2, state = 2, number = 1},
+        -- {id = 5, state = 1, number = 1},
+    },
+
+    
+}
