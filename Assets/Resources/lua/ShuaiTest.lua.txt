@@ -30,7 +30,21 @@ function _M.TestQ()
     -- print_t(_VERSION, "_VERSION")
 
 
+    -- local a = CS.ShuaiFramework.ResourceManager.LoadAssets("sprite/chief")
+    -- print_t(a, "a")
+
+    GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(30, 30)
+    GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 3
+    print_t(GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize, "GamePanel.Image_item")
+    print_t(GamePanel.Image_item.transform.childCount, "GamePanel.Image_item")
     
+    if GamePanel.Image_item.transform.childCount <= 4 then
+        GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 2
+        GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(60, 60)
+    else
+        GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 3
+        GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(40, 40)
+    end
 end
 
 function _M.TestE()
