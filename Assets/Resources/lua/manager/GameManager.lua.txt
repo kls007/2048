@@ -6,7 +6,7 @@ local _M = GameManager
 
 function _M:__init__()
     -- GameManager:Menu()
-    GameManager:StartGame()
+    -- GameManager:StartGame()
     -- GameManager:CloseAll()
 end
 

@@ -1,119 +1,128 @@
 test = test or {}
 local _M = test
 
-_M.view = {}
+function _M:__init__()
+    _M:InitView()
+    _M:Main()
+end
 
-local row = 13 -- 7
-local col = 13 -- 8
-local count = row * col
+function _M:InitView()
+    self.gameObject = UnityEngine.GameObject.Find("TestPanel").gameObject
+    self.transform = self.gameObject.transform
+    local transform = self.transform
 
-local player =
-{
-    id = 1,
-    name = "玩家",
-    level = 1,
-    atk_value = 1,
-    hp_value = 1,
-    def_value = 1,
-}
+    -- 自动生成
+    self.Button_currentColor = self.transform:Find("$currentColor"):GetComponent("Button")
+    self.Image_currentColor = self.transform:Find("$currentColor"):GetComponent("Image")
+    self.pallete = {
+        gameObject = transform:Find("-pallete").gameObject,
+        Button_Image1 = self.transform:Find("-pallete/$Image1"):GetComponent("Button"),
+        Image_Image1 = self.transform:Find("-pallete/$Image1"):GetComponent("Image"),
+        Button_Image2 = self.transform:Find("-pallete/$Image2"):GetComponent("Button"),
+        Image_Image2 = self.transform:Find("-pallete/$Image2"):GetComponent("Image"),
+        Button_Image3 = self.transform:Find("-pallete/$Image3"):GetComponent("Button"),
+        Image_Image3 = self.transform:Find("-pallete/$Image3"):GetComponent("Image"),
+        Button_Image4 = self.transform:Find("-pallete/$Image4"):GetComponent("Button"),
+        Image_Image4 = self.transform:Find("-pallete/$Image4"):GetComponent("Image"),
+        Button_Image5 = self.transform:Find("-pallete/$Image5"):GetComponent("Button"),
+        Image_Image5 = self.transform:Find("-pallete/$Image5"):GetComponent("Image"),
+        Button_Image6 = self.transform:Find("-pallete/$Image6"):GetComponent("Button"),
+        Image_Image6 = self.transform:Find("-pallete/$Image6"):GetComponent("Image"),
+        Button_Image7 = self.transform:Find("-pallete/$Image7"):GetComponent("Button"),
+        Image_Image7 = self.transform:Find("-pallete/$Image7"):GetComponent("Image"),
+        Button_Image8 = self.transform:Find("-pallete/$Image8"):GetComponent("Button"),
+        Image_Image8 = self.transform:Find("-pallete/$Image8"):GetComponent("Image"),
+        Button_Image9 = self.transform:Find("-pallete/$Image9"):GetComponent("Button"),
+        Image_Image9 = self.transform:Find("-pallete/$Image9"):GetComponent("Image"),
+        Button_Image10 = self.transform:Find("-pallete/$Image10"):GetComponent("Button"),
+        Image_Image10 = self.transform:Find("-pallete/$Image10"):GetComponent("Image"),
+        Button_Image11 = self.transform:Find("-pallete/$Image11"):GetComponent("Button"),
+        Image_Image11 = self.transform:Find("-pallete/$Image11"):GetComponent("Image")
+    }
+    self.pixels = {
+        gameObject = transform:Find("-pixels").gameObject,
+        Button_pixel = self.transform:Find("-pixels/$pixel"):GetComponent("Button"),
+        Image_pixel = self.transform:Find("-pixels/$pixel"):GetComponent("Image")
+    }
+    -- 自动生成
 
-function _M.__init__()
-    _M.view.gameObject = UnityEngine.GameObject.Find("Canvas/Root_Panel/GamePanel").gameObject
-    _M.view.transform = _M.view.gameObject.transform
-    local parent = _M.view.transform:Find("$ground");
-    local prefab = parent.transform:GetChild(0).gameObject
-    functions.SetActiveAllChildren(parent, false)
-    for index = 1, count, 1 do
-        local gameObject = UnityEngine.GameObject.Instantiate(prefab)
-        local transform = gameObject.transform
-        gameObject:SetActive(true)
-        gameObject.name = "cell_" .. index
-        transform.parent = parent.transform
+    self.buttonList = {
+        self.pallete.Button_Image1,
+        self.pallete.Button_Image2,
+        self.pallete.Button_Image3,
+        self.pallete.Button_Image4,
+        self.pallete.Button_Image5,
+        self.pallete.Button_Image6,
+        self.pallete.Button_Image7,
+        self.pallete.Button_Image8,
+        self.pallete.Button_Image9,
+        self.pallete.Button_Image10,
+        self.pallete.Button_Image11,
+    }
+end
 
-        local cell = _M.GetCell(gameObject.transform)
+function _M:Main()
+    self:AddListener()
+    self:Start()
+end
 
-        cell.headicon = math.random(1, cell.SpriteRes_headicon.spriteList.Count)
-        cell.level = math.random(1, cell.SpriteRes_frame.spriteList.Count)
-        
-        cell.atk_value = math.random(1, 10)
-        cell.hp_value = math.random(1, 10)
-        cell.ef_value = math.random(1, 10)
+function _M:AddListener()
+    for index, value in ipairs(self.buttonList) do
+        UnityEngine.EventTriggerListener.Get(value.gameObject, nil).onClick = function()
+            -- print(index)
 
-        _M.InitCell(cell)
-
-        UnityEngine.EventTriggerListener.Get(cell.Image_background.gameObject, index).onClick = function()
-            -- TipManager.Show(index)
-
-            if cell.hp_value <= 0 then
-                TipManager.Show("该怪物已死亡")
-                return
-            end
-
-            cell.hp_value = cell.hp_value - player.atk_value
-            if cell.hp_value <= 0 then
-                cell.hp_value = 0
-                _M.DeadCell(cell)
-            end
-            _M.RefreshEnergy(cell)
-
-            cell.Animator_hurt:Play("Attack_Animation")
+            local clickButtonImage = value.gameObject:GetComponent("Image")
+            self.Image_currentColor.color = clickButtonImage.color
         end
     end
 end
 
-function _M.InitCell(cell)
-    cell.Image_dead.gameObject:SetActive(false)
-
-    local bg = math.random(1, cell.SpriteRes_background.spriteList.Count)
-    cell.Image_background.sprite = cell.SpriteRes_background.spriteList[bg - 1]
-
-    cell.Image_headicon.sprite = cell.SpriteRes_headicon.spriteList[cell.headicon - 1]
-    cell.Image_frame.sprite = cell.SpriteRes_frame.spriteList[cell.level - 1]
-    
-    _M.RefreshEnergy(cell)
+function _M:DrawColor(gameObject)
+    local clickButtonImage = gameObject:GetComponent("Image")
+    clickButtonImage.color = self.Image_currentColor.color
 end
 
-function _M.RefreshEnergy(cell)
-    cell.Text_atk_value.text = cell.atk_value
-    cell.Text_hp_value.text = cell.hp_value
-    cell.Text_def_value.text = cell.def_value
+function _M:Start()
+    self.row = 15
+    self.col = 15
+    self.width = 60
+    self.space = 2
+    self.list = {}
+    for y = 1, self.row, 1 do
+        self.list[y] = {}
+        for x = 1, self.col, 1 do
+            self.list[y][x] = 0
+        end
+    end
+
+    local parent = self.pixels.gameObject.transform
+    local prefab = parent.transform:GetChild(0).gameObject
+    functions.SetActiveAllChildren(parent, false)
+    for y = 1, self.row, 1 do
+        self.list[y] = {}
+        for x = 1, self.col, 1 do
+            local gameObject = functions.GetGo(parent, prefab)
+            self.list[y][x] = gameObject
+            gameObject.name = y .. "_" .. x
+            gameObject:GetComponent("RectTransform").sizeDelta = CS.UnityEngine.Vector2(self.width, self.width)
+            gameObject.transform.localPosition = CS.UnityEngine.Vector3(x * (self.width + self.space) - 560, y * (self.width + self.space) - 700, 0)
+            
+            
+            UnityEngine.EventTriggerListener.Get(gameObject, nil).onDown = function()
+                self.isDown = true
+                self:DrawColor(gameObject)
+            end
+            UnityEngine.EventTriggerListener.Get(gameObject, nil).onUp = function()
+                self.isDown = false
+            end
+            UnityEngine.EventTriggerListener.Get(gameObject, nil).onEnter = function()
+                if self.isDown == true then
+                    self:DrawColor(gameObject)
+                end
+            end
+        end
+    end
+
 end
 
-function _M.DeadCell(cell)
-    cell.Image_dead.gameObject:SetActive(true)
-end
-
-function _M.GetCell(transform)
-    local self = {}
-
-    self.id = 1
-    self.name = "椎命由奈"
-    self.level = 1
-    self.atk_value = 1
-    self.hp_value = 1
-    self.def_value = 1
-
-    -- self.ground = transform:Find("$ground");
-    -- self.cell = transform:Find("$ground/$cell");
-    self.Image_background = transform:Find("$background"):GetComponent("Image");
-    self.SpriteRes_background = transform:Find("$background"):GetComponent("SpriteRes");
-    self.monster = transform:Find("$monster");
-    self.Image_headicon = transform:Find("$monster/$headicon"):GetComponent("Image");
-    self.SpriteRes_headicon = transform:Find("$monster/$headicon"):GetComponent("SpriteRes");
-    self.Image_frame = transform:Find("$monster/$frame"):GetComponent("Image");
-    self.SpriteRes_frame = transform:Find("$monster/$frame"):GetComponent("SpriteRes");
-    self.Image_atk = transform:Find("$monster/$atk"):GetComponent("Image");
-    self.Text_atk_value = transform:Find("$monster/$atk/$atk_value"):GetComponent("Text");
-    self.Image_hp = transform:Find("$monster/$hp"):GetComponent("Image");
-    self.Text_hp_value = transform:Find("$monster/$hp/$hp_value"):GetComponent("Text");
-    self.Image_def = transform:Find("$monster/$def"):GetComponent("Image");
-    self.Text_def_value = transform:Find("$monster/$def/$def_value"):GetComponent("Text");
-    self.Image_hurt = transform:Find("$hurt"):GetComponent("Image");
-    self.Animator_hurt = transform:Find("$hurt"):GetComponent("Animator");
-    self.Image_dead = transform:Find("$dead"):GetComponent("Image");
-
-
-    return self
-end
-
--- _M.__init__()
+_M:__init__()

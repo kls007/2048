@@ -17,7 +17,7 @@ end
 function _M.require()
     require "lua/core/requireAll"
 
-    -- require "test"
+    require "lua/test"
 end
 
 _M.__init__()

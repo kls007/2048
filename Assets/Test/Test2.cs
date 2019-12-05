@@ -15,6 +15,7 @@ public class Test2 : MonoBehaviour
     void Start()
     {
         DrawPolygon();
+        RectTransform
     }
 
     void DrawPolygon()
