@@ -171,6 +171,7 @@
      <None Include="Assets\XLua\Examples\06_Coroutine\Resources\cs_coroutine.lua.txt" />
      <None Include="Assets\Resources\lua\core\Actions.lua.txt" />
      <None Include="Assets\Resources\lua\gui\PanelClass.lua.txt" />
+     <None Include="Assets\PixelDraw\1.lua.txt" />
      <None Include="Assets\Resources\lua\data\mingzhu\sanguoyanyi.lua.txt" />
      <None Include="Assets\XLua\Examples\02_U3DScripting\LuaTestScript.lua.txt" />
      <None Include="Assets\Resources\lua\manager\GameManager.lua.txt" />
@@ -184,6 +185,7 @@
      <None Include="Assets\XLua\Examples\06_Coroutine\Resources\coruntine_test.lua.txt" />
      <None Include="Assets\Resources\lua\data\mingzhu\shanhaijing.lua.txt" />
      <None Include="Assets\Resources\lua\gui\GamePanel.lua.txt" />
+     <None Include="Assets\Resources\lua\tools\json.lua.txt" />
      <None Include="Assets\Resources\lua\manager\AudioManager.lua.txt" />
      <None Include="Assets\Resources\lua\core\GlobalObject.lua.txt" />
      <None Include="Assets\Resources\lua\data\mingzhu\hongloumeng.lua.txt" />

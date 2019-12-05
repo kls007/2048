@@ -14,30 +14,12 @@ function _M:InitView()
     -- 自动生成
     self.Button_currentColor = self.transform:Find("$currentColor"):GetComponent("Button")
     self.Image_currentColor = self.transform:Find("$currentColor"):GetComponent("Image")
+    self.Button_Button_clear = self.transform:Find("$Button_clear"):GetComponent("Button")
+    self.Image_Button_clear = self.transform:Find("$Button_clear"):GetComponent("Image")
     self.pallete = {
         gameObject = transform:Find("-pallete").gameObject,
-        Button_Image1 = self.transform:Find("-pallete/$Image1"):GetComponent("Button"),
-        Image_Image1 = self.transform:Find("-pallete/$Image1"):GetComponent("Image"),
-        Button_Image2 = self.transform:Find("-pallete/$Image2"):GetComponent("Button"),
-        Image_Image2 = self.transform:Find("-pallete/$Image2"):GetComponent("Image"),
-        Button_Image3 = self.transform:Find("-pallete/$Image3"):GetComponent("Button"),
-        Image_Image3 = self.transform:Find("-pallete/$Image3"):GetComponent("Image"),
-        Button_Image4 = self.transform:Find("-pallete/$Image4"):GetComponent("Button"),
-        Image_Image4 = self.transform:Find("-pallete/$Image4"):GetComponent("Image"),
-        Button_Image5 = self.transform:Find("-pallete/$Image5"):GetComponent("Button"),
-        Image_Image5 = self.transform:Find("-pallete/$Image5"):GetComponent("Image"),
-        Button_Image6 = self.transform:Find("-pallete/$Image6"):GetComponent("Button"),
-        Image_Image6 = self.transform:Find("-pallete/$Image6"):GetComponent("Image"),
-        Button_Image7 = self.transform:Find("-pallete/$Image7"):GetComponent("Button"),
-        Image_Image7 = self.transform:Find("-pallete/$Image7"):GetComponent("Image"),
-        Button_Image8 = self.transform:Find("-pallete/$Image8"):GetComponent("Button"),
-        Image_Image8 = self.transform:Find("-pallete/$Image8"):GetComponent("Image"),
-        Button_Image9 = self.transform:Find("-pallete/$Image9"):GetComponent("Button"),
-        Image_Image9 = self.transform:Find("-pallete/$Image9"):GetComponent("Image"),
-        Button_Image10 = self.transform:Find("-pallete/$Image10"):GetComponent("Button"),
-        Image_Image10 = self.transform:Find("-pallete/$Image10"):GetComponent("Image"),
-        Button_Image11 = self.transform:Find("-pallete/$Image11"):GetComponent("Button"),
-        Image_Image11 = self.transform:Find("-pallete/$Image11"):GetComponent("Image")
+        Button_Image = self.transform:Find("-pallete/$Image"):GetComponent("Button"),
+        Image_Image = self.transform:Find("-pallete/$Image"):GetComponent("Image")
     }
     self.pixels = {
         gameObject = transform:Find("-pixels").gameObject,
@@ -45,20 +27,6 @@ function _M:InitView()
         Image_pixel = self.transform:Find("-pixels/$pixel"):GetComponent("Image")
     }
     -- 自动生成
-
-    self.buttonList = {
-        self.pallete.Button_Image1,
-        self.pallete.Button_Image2,
-        self.pallete.Button_Image3,
-        self.pallete.Button_Image4,
-        self.pallete.Button_Image5,
-        self.pallete.Button_Image6,
-        self.pallete.Button_Image7,
-        self.pallete.Button_Image8,
-        self.pallete.Button_Image9,
-        self.pallete.Button_Image10,
-        self.pallete.Button_Image11,
-    }
 end
 
 function _M:Main()
@@ -67,13 +35,37 @@ function _M:Main()
 end
 
 function _M:AddListener()
-    for index, value in ipairs(self.buttonList) do
-        UnityEngine.EventTriggerListener.Get(value.gameObject, nil).onClick = function()
-            -- print(index)
+    UnityEngine.EventTriggerListener.Get(self.Button_Button_clear.gameObject, nil).onClick = function()
+        for y = 1, self.row, 1 do
+            for x = 1, self.col, 1 do
+                self.list[y][x]:GetComponent("Image").color = Color.HexToRGBA("ffffff")
+            end
+        end
+    end
 
-            local clickButtonImage = value.gameObject:GetComponent("Image")
+    UnityEngine.EventTriggerListener.Get(self.Button_currentColor.gameObject, nil).onClick = function()
+        for y = 1, self.row, 1 do
+            for x = 1, self.col, 1 do
+                self.list[y][x]:GetComponent("Image").color = self.Button_currentColor.gameObject:GetComponent("Image").color
+            end
+        end
+    end
+
+    self.buttonList = {}
+    local parent = self.pallete.gameObject.transform
+    local prefab = parent.transform:GetChild(0).gameObject
+    functions.SetActiveAllChildren(parent, false)
+    for i = 1, #SB.colors, 1 do
+        local gameObject = functions.GetGo(parent, prefab)
+        local image = gameObject:GetComponent("Image")
+        image.color = Color.HexToRGBA(SB.colors[i])
+
+        UnityEngine.EventTriggerListener.Get(gameObject, nil).onClick = function()
+            local clickButtonImage = gameObject:GetComponent("Image")
             self.Image_currentColor.color = clickButtonImage.color
         end
+
+        self.buttonList[i] = gameObject
     end
 end
 
@@ -105,9 +97,9 @@ function _M:Start()
             self.list[y][x] = gameObject
             gameObject.name = y .. "_" .. x
             gameObject:GetComponent("RectTransform").sizeDelta = CS.UnityEngine.Vector2(self.width, self.width)
-            gameObject.transform.localPosition = CS.UnityEngine.Vector3(x * (self.width + self.space) - 560, y * (self.width + self.space) - 700, 0)
-            
-            
+            gameObject.transform.localPosition =
+                CS.UnityEngine.Vector3(x * (self.width + self.space) - 500, y * (self.width + self.space) - 680, 0)
+
             UnityEngine.EventTriggerListener.Get(gameObject, nil).onDown = function()
                 self.isDown = true
                 self:DrawColor(gameObject)
@@ -123,6 +115,8 @@ function _M:Start()
         end
     end
 
+    self.colorIndex = 1
+    self.Image_currentColor.color = self.buttonList[self.colorIndex].gameObject:GetComponent("Image").color
 end
 
 _M:__init__()

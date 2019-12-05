@@ -29,30 +29,68 @@ function _M.TestQ()
 
     -- print_t(_VERSION, "_VERSION")
 
-
     -- local a = CS.ShuaiFramework.ResourceManager.LoadAssets("sprite/chief")
     -- print_t(a, "a")
 
-    GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(30, 30)
-    GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 3
-    print_t(GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize, "GamePanel.Image_item")
-    print_t(GamePanel.Image_item.transform.childCount, "GamePanel.Image_item")
-    
-    if GamePanel.Image_item.transform.childCount <= 4 then
-        GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 2
-        GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(60, 60)
-    else
-        GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 3
-        GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(40, 40)
+    -- GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(30, 30)
+    -- GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 3
+    -- print_t(GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize, "GamePanel.Image_item")
+    -- print_t(GamePanel.Image_item.transform.childCount, "GamePanel.Image_item")
+
+    -- if GamePanel.Image_item.transform.childCount <= 4 then
+    --     GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 2
+    --     GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(60, 60)
+    -- else
+    --     GamePanel.Image_item:GetComponent("GridLayoutGroup").constraintCount = 3
+    --     GamePanel.Image_item:GetComponent("GridLayoutGroup").cellSize = CS.UnityEngine.Vector2(40, 40)
+    -- end
+
+    -- print(UnityEngine.Application.dataPath .. "/PixelDraw/1.lua.txt")
+    -- local file = readfile([[D:/IDE/WorkSpace/WorkSpace_Unity/WorkSpace_Unity_All/2048_OverCooked/Assets/Resources/lua/test.lua.txt]])
+    -- print(file)
+
+    -- print(json)
+
+    -- local t = {1,2,3, a = "b"}
+    -- local str = json.encode(t)
+    -- print_t(str, "str")
+
+    local myTable = {}
+    for y = 1, test.row, 1 do
+        myTable[y] = {}
+        for x = 1, test.col, 1 do
+            myTable[y][x] = {}
+            myTable[y][x].r = test.list[y][x]:GetComponent("Image").color.r
+            myTable[y][x].g = test.list[y][x]:GetComponent("Image").color.g
+            myTable[y][x].b = test.list[y][x]:GetComponent("Image").color.b
+            myTable[y][x].a = test.list[y][x]:GetComponent("Image").color.a
+            print_t(myTable[y][x], y .. "-" .. x)
+        end
     end
+
+    local str = json.encode(myTable)
+    local file = writefile(UnityEngine.Application.dataPath .. "/PixelDraw/1.lua.txt", str)
+    print(file)
 end
 
 function _M.TestE()
     print_t("EEE", "ShuaiTest")
     -- TipManager.Show("TestE")
-    
 
-    print_t(GamePanel.list, "GamePanel.list")
+    local file = readfile(UnityEngine.Application.dataPath .. "/PixelDraw/1.lua.txt")
+    print(file)
+    local myTable = json.decode(file)
+    print_t(myTable, "myTable")
+
+    local self = test
+    for y = 1, self.row, 1 do
+        for x = 1, self.col, 1 do
+            self.list[y][x]:GetComponent("Image").color =
+                CS.UnityEngine.Color(myTable[y][x].r, myTable[y][x].g, myTable[y][x].b, myTable[y][x].a)
+        end
+    end
+
+    -- print_t(GamePanel.list, "GamePanel.list")
 
     -- local path = "sprite/food"
     -- print_t(CS.ShuaiFramework.ResourceManager.LoadAssets(path .. "/" .. "Lettuce_Icon"))
@@ -84,8 +122,6 @@ function _M.TestD()
     GamePanel:Right()
 end
 
-
 _M.__init__()
 
 -- return _M
-
